@@ -1,4 +1,4 @@
-name: Sync .pre-commit-config.yaml
+name: Sync .pre-commit-config.yaml and gitleaks folder
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
         git config --global user.email "me.choukri1234@gmail.com"
         git config --global user.name "mehdiiix"
 
-    - name: Sync .pre-commit-config.yaml to target repositories
+    - name: Sync .pre-commit-config.yaml and gitleaks folder to target repositories
       env:
         MEHDI: ${{ secrets.MEHDI }}
         TARGET_REPOS: ${{ secrets.TARGET_REPOS }}
@@ -32,8 +32,9 @@ jobs:
           git clone "https://$MEHDI@github.com/$repo.git"
           cd "$(basename "$repo")"
           cp ../.pre-commit-config.yaml .pre-commit-config.yaml
-          git add .pre-commit-config.yaml
-          git commit -m "Sync .pre-commit-config.yaml from pre-commit-config-repo"
+          cp -r ../gitleaks gitleaks
+          git add .pre-commit-config.yaml gitleaks
+          git commit -m "Sync .pre-commit-config.yaml and gitleaks folder from pre-commit-config-repo"
           git push "https://$MEHDI@github.com/$repo.git" HEAD:main
           cd ..
           rm -rf "$(basename "$repo")"
