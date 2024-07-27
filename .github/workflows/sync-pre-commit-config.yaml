@@ -34,8 +34,12 @@ jobs:
           cp ../.pre-commit-config.yaml .pre-commit-config.yaml
           cp -r ../gitleaks gitleaks
           git add .pre-commit-config.yaml gitleaks
-          git commit -m "Sync .pre-commit-config.yaml and gitleaks folder from pre-commit-config-repo"
-          git push "https://$MEHDI@github.com/$repo.git" HEAD:main
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync .pre-commit-config.yaml and gitleaks folder from pre-commit-config-repo"
+            git push "https://$MEHDI@github.com/$repo.git" HEAD:main
+          fi
           cd ..
           rm -rf "$(basename "$repo")"
         done
