@@ -16,6 +16,11 @@ jobs:
     - name: Set up Git
       run: sudo apt-get install -y git
 
+    - name: Configure Git user
+      run: |
+        git config --global user.email "me.choukri1234@gmail.com"
+        git config --global user.name "mehdiiix"
+
     - name: Sync .pre-commit-config.yaml to target repositories
       env:
         MEHDI: ${{ secrets.MEHDI }}
