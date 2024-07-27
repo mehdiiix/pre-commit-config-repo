@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout this repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Git
       run: |
@@ -21,11 +21,9 @@ jobs:
     - name: Sync .pre-commit-config.yaml to target repositories
       env:
         MEHDI: ${{ secrets.MEHDI }}
+        TARGET_REPOS: ${{ secrets.TARGET_REPOS }}
       run: |
-        repositories=(
-          "mehdiiix/cinema_MS"
-          "mehdiiix/big-back"
-        )
+        IFS=' ' read -r -a repositories <<< "$TARGET_REPOS"
 
         for repo in "${repositories[@]}"; do
           git clone "https://github.com/$repo.git"
