@@ -1,0 +1,39 @@
+name: Sync .pre-commit-config.yaml
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-config:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout this repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git
+
+    - name: Sync .pre-commit-config.yaml to target repositories
+      env:
+        MEHDI: ${{ secrets.MEHDI }}
+      run: |
+        repositories=(
+          "mehdiiix/cinema_MS"
+          "mehdiiix/big-back"
+        )
+
+        for repo in "${repositories[@]}"; do
+          git clone "https://github.com/$repo.git"
+          cd "$(basename "$repo")"
+          cp ../.pre-commit-config.yaml .pre-commit-config.yaml
+          git add .pre-commit-config.yaml
+          git commit -m "Sync .pre-commit-config.yaml from pre-commit-config-repo"
+          git push "https://$MEHDI@github.com/$repo.git" HEAD:main
+          cd ..
+          rm -rf "$(basename "$repo")"
+        done
