@@ -16,6 +16,11 @@ jobs:
     - name: Set up Git
       run: sudo apt-get install -y git
 
+    - name: Install Python and Pre-Commit
+      run: |
+        sudo apt-get install -y python3-pip
+        pip3 install pre-commit
+
     - name: Configure Git user
       run: |
         git config --global user.email "me.choukri1234@gmail.com"
@@ -43,3 +48,8 @@ jobs:
           cd ..
           rm -rf "$(basename "$repo")"
         done
+
+    - name: Run Pre-Commit
+      run: |
+        pre-commit install
+        pre-commit run --all-files
